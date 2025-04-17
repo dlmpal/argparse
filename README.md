@@ -29,6 +29,8 @@ int main(int argc, char *argv[])
     std::cout << parser.get_argument("abs-tol")->str();
     std::cout << parser.get_argument("log-level")->str();
 
+    int n_iter_max = parser.get_argument("n-iter-max")->value<int>();
+
     return 0;
 }
 ```
