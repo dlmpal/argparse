@@ -15,12 +15,15 @@ namespace argparse
     {
     public:
         /// @brief Create an argument with a specified name
-        Argument(const std::string &name);
+        Argument(const std::string &name, bool required = false);
 
         /// @brief Get the argument's name
         std::string name() const;
 
-        /// @brief Get the argument's value in the specified return type
+        /// @brief Get the argument's value in the specified return type.
+        /// @note If the value string is empty and the return type is not
+        /// string or bool, raises an exception. For empty value string and bool
+        /// return type, returns true
         template <typename T>
         auto value() const
         {
@@ -52,7 +55,7 @@ namespace argparse
             }
             else
             {
-                return value;
+                return value_;
             }
         }
 
@@ -86,6 +89,9 @@ namespace argparse
         /// @note Returns the argument
         Argument &help(const std::string &help);
 
+        /// @brief Returns whether the argument is required
+        bool required() const;
+
         /// @brief Get the string representation of the argument
         std::string str() const;
 
@@ -98,6 +104,9 @@ namespace argparse
 
         /// @brief Help string
         std::string help_;
+
+        /// @brief Whether the variable's value must be specified
+        bool required_;
     };
 
     /// @brief Command-line argument parser

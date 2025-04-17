@@ -1,15 +1,17 @@
 #include "argparse.hpp"
 #include <algorithm>
 #include <format>
+#include <set>
 #include <iostream>
 
 namespace argparse
 {
     //=============================================================================
-    Argument::Argument(const std::string &name)
+    Argument::Argument(const std::string &name, bool required)
         : name_(name),
           help_(),
-          value_()
+          value_(),
+          required_(required)
     {
     }
     //=============================================================================
@@ -30,10 +32,15 @@ namespace argparse
         return *this;
     }
     //=============================================================================
+    bool Argument::required() const
+    {
+        return required_;
+    }
+    //=============================================================================
     std::string Argument::str() const
     {
-        return std::format("--{}\t{} (Value: {})\n",
-                           name_, help_, value_);
+        return std::format("--{}\t{} (Required {}, Value: {})\n",
+                           name_, help_, required_, value_);
     }
     //=============================================================================
     ArgParser::ArgParser(std::vector<std::string> prefixes)
@@ -139,6 +146,9 @@ namespace argparse
             exit(0);
         }
 
+        // Keep track of which required arguments have been provided
+        std::set<std::string> provided;
+
         // Loop over the provided arguments, skipping the first
         for (int i = 1; i < argc; i++)
         {
@@ -154,6 +164,23 @@ namespace argparse
             if (auto arg = get_argument(name); arg != nullptr)
             {
                 arg->value(value);
+
+                // If required, mark the argument as provided
+                if (arg->required())
+                {
+                    provided.insert(name);
+                }
+            }
+        }
+
+        // Check if any required arguments were not provided
+        for (const auto &arg : args_)
+        {
+            if (arg.required() and not provided.contains(arg.name()))
+            {
+                std::cerr << std::format("Required argument {} was not provided\n",
+                                         arg.name());
+                exit(-1);
             }
         }
     }
