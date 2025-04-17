@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 
     parser.add_argument(Argument("print-output").help("Whether to print the output").value(false));
     parser.add_argument(Argument("n-iter-max").help("Max no. iterations for the solver").value(10));
-    parser.add_argument(Argument("abs-tol").help("Absolute residual norm tolerance for the solver").value(1e-10));
+    parser.add_argument(Argument("abs-tol").help("Absolute residual norm tolerance for the solver").value(1e-6));
     parser.add_argument(Argument("log-level").help("Log level").value("info"));
 
     parser.parse_args(argc, argv);
