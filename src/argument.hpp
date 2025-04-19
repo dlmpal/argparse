@@ -38,16 +38,13 @@ namespace argparse
             {
                 return std::stoi(value_);
             }
-            else if constexpr (std::is_same_v<T, real_t>)
+            else if constexpr (std::is_same_v<T, float>)
             {
-                if constexpr (std::is_same_v<real_t, float>)
-                {
-                    return std::stof(value_);
-                }
-                else
-                {
-                    return std::stod(value_);
-                }
+                return std::stof(value_);
+            }
+            else if constexpr (std::is_same_v<T, double>)
+            {
+                return std::stod(value_);
             }
             else
             {
