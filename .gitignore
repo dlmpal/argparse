@@ -1,4 +1,5 @@
 .vscode/
 build/
+cmake/argparseConfig.cmake
 examples/build/
 *.sh

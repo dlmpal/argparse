@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.16)
+project(example)
+find_package(argparse REQUIRED)
+add_executable(example main.cpp)
+target_link_libraries(example argparse::argparse)
