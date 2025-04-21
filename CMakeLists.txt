@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.18)
 project(ARGPARSE VERSION "0.0.1")
 #==============================================================================
 # Build type
-if(NOT DEFINED CMAKE_BUILD_TYPE)
+if(NOT DEFINED ${CMAKE_BUILD_TYPE})
         set(CMAKE_BUILD_TYPE RELEASE)
 endif()
 #==============================================================================
@@ -25,6 +25,7 @@ target_include_directories(argparse PUBLIC
 #==============================================================================
 # Set compiler flags
 ## Relase flags
+message(${CMAKE_BUILD_TYPE})
 if (CMAKE_BUILD_TYPE MATCHES RELEASE)
         list(APPEND argparse_cxx_flags -O3)
 endif()
