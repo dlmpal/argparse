@@ -2,8 +2,8 @@
 cmake_minimum_required(VERSION 3.18)
 project(ARGPARSE VERSION "0.0.1")
 #==============================================================================
-# Build type
-if(NOT DEFINED ${CMAKE_BUILD_TYPE})
+# Default build type
+if(CMAKE_BUILD_TYPE STREQUAL "")
         set(CMAKE_BUILD_TYPE RELEASE)
 endif()
 #==============================================================================
@@ -24,16 +24,20 @@ target_include_directories(argparse PUBLIC
                            "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
 #==============================================================================
 # Set compiler flags
+
 ## Relase flags
-message(${CMAKE_BUILD_TYPE})
 if (CMAKE_BUILD_TYPE MATCHES RELEASE)
-        list(APPEND argparse_cxx_flags -O3)
+        list(APPEND argparse_cxx_release_flags -O3)
 endif()
+
 ## Debug flags
 if (CMAKE_BUILD_TYPE MATCHES DEBUG)
-        list(APPEND  argparse_cxx_flags -g;-Wall;-Wextra;-Wpedantic;-Wconversion)
+        list(APPEND  argparse_cxx_debug_flags -g;-Wall;-Wextra;-Wpedantic;-Wconversion)
 endif()
-target_compile_options(argparse PUBLIC ${argparse_cxx_flags})
+
+target_compile_options(argparse PUBLIC 
+                       $<$<CONFIG:Release>:${argparse_cxx_release_flags}>
+                       $<$<CONFIG:Debug>:${argparse_cxx_debug_flags}>)
 #==============================================================================
 # C++ standard
 set_target_properties(argparse PROPERTIES 
