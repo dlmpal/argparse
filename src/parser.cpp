@@ -118,7 +118,7 @@ namespace argparse
     std::array<std::string, 2>
     ArgParser::parse_single_arg(const std::string &arg) const
     {
-        for (const auto prefix : prefixes_)
+        for (const auto &prefix : prefixes_)
         {
             // Get the start and end position of the prefix
             std::size_t prefix_start = arg.find(prefix);
@@ -150,8 +150,8 @@ namespace argparse
         }
 
         // Warn that the argument is invalid
-#ifdef DEBUG
-        std::cout << std::format("Invalid command-line argument: {}\n", arg);
+#ifndef NDEBUG
+        std::cout << std::format("*WARNING*: Invalid command-line argument: {}\n", arg);
 #endif
         return {};
     }

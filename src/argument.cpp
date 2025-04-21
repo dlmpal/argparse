@@ -6,8 +6,8 @@ namespace argparse
     //=============================================================================
     Argument::Argument(const std::string &name, bool required)
         : name_(name),
-          help_(),
           value_(),
+          help_(),
           required_(required)
     {
     }
