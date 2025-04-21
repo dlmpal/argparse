@@ -1,40 +1,43 @@
 #==============================================================================
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.18)
 project(ARGPARSE VERSION "0.0.1")
 #==============================================================================
 # Build type
 if(NOT DEFINED CMAKE_BUILD_TYPE)
         set(CMAKE_BUILD_TYPE RELEASE)
 endif()
-## Relase
-if (CMAKE_BUILD_TYPE MATCHES RELEASE)
-        set(CMAKE_CXX_FLAGS "-O3")
-endif()
-## Debug
-if (CMAKE_BUILD_TYPE MATCHES DEBUG)
-        set(CMAKE_CXX_FLAGS "-g -Wall -Wextra -Wpedantic -Wconversion")
-endif()
 #==============================================================================
-# argparse
+# Create the library
+add_library(argparse SHARED)
+
 set(argparse_sources ${CMAKE_CURRENT_SOURCE_DIR}/src/argument.cpp
                      ${CMAKE_CURRENT_SOURCE_DIR}/src/parser.cpp)
+
+target_sources(argparse PRIVATE ${argparse_sources})
 
 set(argparse_headers ${CMAKE_CURRENT_SOURCE_DIR}/src/argument.hpp
                      ${CMAKE_CURRENT_SOURCE_DIR}/src/parser.hpp
                      ${CMAKE_CURRENT_SOURCE_DIR}/src/argparse.hpp)
 
-add_library(argparse SHARED ${argparse_sources})
-
 target_include_directories(argparse PUBLIC 
                            "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
                            "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
-
-# argparse needs c++23 (for std::format)
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        target_compile_options(argparse PRIVATE "-std=c++23")
-else()
-        message(FATAL_ERROR "Unsupported compiler: " CMAKE_CXX_COMPILER_ID)
+#==============================================================================
+# Set compiler flags
+## Relase flags
+if (CMAKE_BUILD_TYPE MATCHES RELEASE)
+        list(APPEND argparse_cxx_flags -O3)
 endif()
+## Debug flags
+if (CMAKE_BUILD_TYPE MATCHES DEBUG)
+        list(APPEND  argparse_cxx_flags -g;-Wall;-Wextra;-Wpedantic;-Wconversion)
+endif()
+target_compile_options(argparse PUBLIC ${argparse_cxx_flags})
+#==============================================================================
+# C++ standard
+set_target_properties(argparse PROPERTIES 
+                      CXX_STANDARD 23
+                      CXX_STANDARD_REQUIRED ON)
 #==============================================================================
 # Installation
 include(GNUInstallDirs)
